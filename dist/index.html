@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <title>Document</title>
+</head>
+<body>
+    <div class="container">
+
+        <h1>Cadastro de Nomes</h1>
+        
+        <div class="row">
+        
+            <div class="col">
+        
+                <input type="text" id="texto" class="form-control"
+        
+                style="display:inline;vertical-align:middle;width:auto;"
+        
+                >
+
+                <button type="botao" class=" btn btn-primary">
+                    Enviar
+                    <i class="fa fa-check" aria-hidden="true"></i>
+
+                </button>
+            </div>
+        </div>
+
+        <hr>
+
+        <h1 style="margin-top:40px;"> Lista de Nomes</h1>
+    
+    <div class="row">
+        
+        <div class="col-6">
+
+            <ul class="list-group" id="lista"></ul>
+        </div>
+    
+    </div>
+
+</div>
+
+<script>
+
+window.onload = ()=> {
+
+    const lista = document.querySelector('#lista');
+    read();
+}
+
+function read(){
+
+    lista.innerHTML = '';
+
+    //chamada ajax para o servidor na rota /read
+    axios.get('/read')
+  .then((response) =>{
+    
+    response.data.forEach(element => {
+        lista.innerHTML += `<li class="list-group-item">${element.name}</li>`
+    });
+  })
+  .catch((error) =>{
+    console.log(error);
+  });
+
+}
+
+function create(){
+    
+}
+
+function edit(){
+    
+}
+
+
+function update(){
+    
+}
+
+
+function del(){
+    
+}
+
+</script>
+
+</body>
+</html>
