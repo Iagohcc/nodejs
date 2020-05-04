@@ -19,7 +19,7 @@
         
                 <input type="text" id="texto" class="form-control"
         
-                style="display:inline;vertical-align:middle;width:auto;"
+                style="display:inline; vertical-align:middle;"
         
                 >
 
@@ -51,7 +51,40 @@
 window.onload = ()=> {
 
     const lista = document.querySelector('#lista');
+
+    const botao = document.querySelector('#botao');
+    
+    const texto = document.querySelector('#texto');
+   
+       /* botao.addEventListener('click', create); */
+        lista.addEventListener('click', del);
+        lista.addEventListener('click', edit);
+
     read();
+};
+
+function templateli(id, nome, element = true) {
+    return `
+  
+  ${element ? `<li class="list-group-item">`: ''}
+  ${nome}
+    <i class="btn btn-danger delete fa fa-trash"
+    
+    style="float:right; margin-left: 5px;"
+
+    data-id="${id}";
+    
+    ></i>
+    <i class="btn btn-primary update fa fa-wrench"
+    
+    style="float:right;"
+
+    data-id="${id}";
+    
+    ></i>
+
+    ${element ? `</li>`: ''}
+    `;
 }
 
 function read(){
@@ -63,7 +96,7 @@ function read(){
   .then((response) =>{
     
     response.data.forEach(element => {
-        lista.innerHTML += `<li class="list-group-item">${element.name}</li>`
+        lista.innerHTML += templateli(element.id, element.name);
     });
   })
   .catch((error) =>{
@@ -73,20 +106,90 @@ function read(){
 }
 
 function create(){
-    
+
+const name = texto.value;
+
+axios.post('/create',{name})
+.then(function(response){
+
+console.log(response);
+lista.innerHTML += templateli(response.data[0], name);
+
+})
+.catch(function(error){
+
+    console.log(error);
+
+});    
+
 }
+
 
 function edit(){
+
+    if(element.target.classList.contains('update')){
+
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.setAttribute('value', '');
+        const pai = element.target.parentElement;
+        const id = element.target.dataset.id;
+
+        pai.innerHTML = '';
+        pai.appendChild(input);
+
+        input.addEventListener('keydown', update.bind(pai, id, input));
+        input.focus();
+
+
+    }
     
 }
 
 
-function update(){
+function update(id, input){
+
+    const x = event.key;
+
+    if(x == null || x != 'Enter') return;
+    
+axios.post(`/update/${id}`,{name: input.value })
+.then((response)=>{
+
+    if (response.status = 200){ 
+    this.innerHTML = templateli(id, input.value, false);
+    }
+})
+.catch(function(error){
+
+    console.log(error);
+
+}); 
     
 }
 
 
-function del(){
+function del(element){
+    console.log(element);
+
+    if(element.target.classList.contains('delete')){
+        //id
+        const id = element.target.dataset.id;
+
+        axios.delete(`/delete/${id}`)
+.then(function(response){
+
+if (response.status = 200){
+    lista.removeChild(element.path[1]);
+}
+
+})
+.catch(function(error){
+
+    console.log(error);
+
+}); 
+    }
     
 }
 
